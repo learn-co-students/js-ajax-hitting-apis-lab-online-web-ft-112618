@@ -1,4 +1,24 @@
 // your code here
+function getBranches(el) {
+  let repoName = el.dataset.repository
+  let username = el.dataset.username
+  let req = new XMLHttpRequest();
+  req.addEventListener('load', displayCommits)
+  req.open('GET', `https://api.github.com/repos/${username}/${repoName}/branches`)
+  req.send();
+}
+
+function displayBranches() {
+  let branches = JSON.parse(this.responseText)
+  let branchesList = `<ul>
+  ${branches.map(b => `
+    <li><strong>${b.name}</strong></li>
+    `).join('')}
+  </ul>`
+  let detailsElement = document.querySelector('#details')
+  detailsElement.innerHTML = branchesList
+}
+
 function displayCommits() {
   let commits = JSON.parse(this.responseText)
   let commitsList = `<ul>
@@ -15,7 +35,6 @@ function getCommits(el) {
   let username = el.dataset.username
   let req = new XMLHttpRequest();
   req.addEventListener('load', displayCommits)
-  if (!repoName) {debugger;}
   req.open('GET', `https://api.github.com/repos/${username}/${repoName}/commits`)
   req.send();
 }
